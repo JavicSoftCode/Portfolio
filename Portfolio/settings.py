@@ -140,7 +140,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # LOGIN_URL = '/accounts/signin/'  # Ajusta según tu vista de login
 
 # Modelo de usuario personalizado
-AUTH_USER_MODEL = 'accounts.SuperUser'
+AUTH_USER_MODEL = 'accounts.User'
 
 # Configuración de las URLs de inicio de sesión y cierre de sesión
 LOGIN_URL = 'accounts:signin'  # Nombre de la URL para el inicio de sesión

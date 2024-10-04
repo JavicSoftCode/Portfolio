@@ -29,19 +29,20 @@ class UserSignUpForm(UserCreationForm):
 
 
 class UserSignInForm(AuthenticationForm):
-  username = forms.EmailField(label="Correo Electrónico")
 
   class Meta:
     model = User
-    fields = ('username', 'password')
+    User.email = forms.EmailField(required=True)
+
+    fields = ('email', 'password')
 
   def clean(self):
     cleaned_data = super().clean()
-    username = cleaned_data.get('username')
+    email = cleaned_data.get('email')
     password = cleaned_data.get('password')
 
-    if username and password:
-      user = authenticate(username=username, password=password)
+    if email and password:
+      user = authenticate(email=email, password=password)
       if user is None:
         raise forms.ValidationError(_('Las credenciales son incorrectas.'))
 

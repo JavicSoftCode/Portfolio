@@ -102,6 +102,7 @@ class User(AbstractUser):
   )
 
   USERNAME_FIELD = 'email'
+  REQUIRED_FIELDS = ['birth_day', 'first_name', 'last_name', 'username']  # 'email' no debe estar aquí
 
   class Meta:
     verbose_name = 'Usuario'
@@ -120,9 +121,10 @@ class User(AbstractUser):
 
   def save(self, *args, **kwargs):
     # Encriptar la contraseña si es nueva o ha sido modificada
-    if not self.pk or not User.objects.filter(pk=self.pk, password=self.password).exists():
-      self.password = make_password(self.password)
+    if not self.pk or self.password != User.objects.get(pk=self.pk).password:
+        self.set_password(self.password)  # Utiliza set_password para encriptar
     super(User, self).save(*args, **kwargs)
+
 
   def __str__(self):
     # Asegúrate de que el nombre o el correo no sean None
