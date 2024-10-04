@@ -10,19 +10,16 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!&s+3s__6-3wj5uhck%ymhd7g*tybdmh_n58%!_b!fzdqx7667'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key')  # Usa un valor por defecto solo para desarrollo.
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'  # Asegúrate de que sea 'False' en producción.
 
-ALLOWED_HOSTS = []
+# Hosting permitidos
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
 
 # Application definition
-
 INSTALLED_APPS = [
   'django.contrib.admin',
   'django.contrib.auth',
@@ -37,9 +34,6 @@ INSTALLED_APPS = [
   'BackEnd.Apps.My_Blogs.apps.MyBlogsConfig',
   'BackEnd.Apps.My_Portfolio_and_Projects.apps.MyPortfolioAndProjectsConfig',
 
-  # # Apps de terceros
-  # 'fontawesome',  # pip install django-fontawesome
-
 ]
 
 MIDDLEWARE = [
@@ -50,12 +44,10 @@ MIDDLEWARE = [
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-]
-
   # My middleware
-  # 'BackEnd.Apps.accounts.middleware.NoBackAfterLogoutMiddleware',
-  # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+  # 'BackEnd.Apps.accounts.middleware.no_back_after_logout',  # VISTA BASADA EN FUNCIONES
+  # 'BackEnd.Apps.accounts.middleware.NoBackAfterLogoutMiddleware',  # VISTA BASADA EN FUNCIONES
+]
 
 ROOT_URLCONF = 'Portfolio.urls'
 
@@ -87,19 +79,20 @@ DATABASES = {
     'USER': os.getenv('DB_USERNAME_DATABASE', ''),
     'PASSWORD': os.getenv('DB_PASSWORD_DATABASE', ''),
     'HOST': os.getenv('DB_HOST_DATABASE', ''),
-    'PORT': os.getenv('DB_PORT_DATABASE', ''),
+    'PORT': os.getenv('DB_PORT_DATABASE', '5432'),
   }
 }
 
 # Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
   {
     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
   },
   {
     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    'OPTIONS': {
+      'min_length': 8,  # Asegúrate de que sea al menos 8 caracteres
+    }
   },
   {
     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -132,20 +125,53 @@ MEDIA_URL = '/public/'
 # Ubicacion de la carpeta donde estaran los archivos subidos por el usuario
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-# Nombre de la app y despues el nombre del modelo
-# AUTH_USER_MODEL = 'accounts.AccountsUser'
-# LOGIN_URL = '/accounts/signin/'  # Ajusta según tu vista de login
-
 # Modelo de usuario personalizado
-AUTH_USER_MODEL = 'accounts.SuperUser'
+# AUTH_USER_MODEL = 'accounts.SuperUser'
+AUTH_USER_MODEL = 'accounts.SuperUser'  # Asegúrate de que esta línea apunte a tu modelo de usuario
 
 # Configuración de las URLs de inicio de sesión y cierre de sesión
 LOGIN_URL = 'accounts:signin'  # Nombre de la URL para el inicio de sesión
 LOGOUT_URL = 'accounts:signout'  # Nombre de la URL para el cierre de sesión
 LOGIN_REDIRECT_URL = 'core:home'  # Cambia esto a la URL a la que deseas redirigir después del inicio de sesión
 SIGNUP_REDIRECT_URL = 'accounts:signin'  # O la URL a la que quieras redirigir después del registro
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = False  # Redirigir a HTTPS
+SESSION_COOKIE_SECURE = True  # Usar solo HTTPS para las cookies de sesión
+CSRF_COOKIE_SECURE = True  # Usar solo HTTPS para la cookie CSRF
+SECURE_HSTS_SECONDS = 3600  # O más, en segundos
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#
+#
+#
+# AUTHENTICATION_BACKENDS = (
+#     'accounts.backends.CustomUserBackend',  # Asegúrate de poner la ruta correcta
+#     'django.contrib.auth.backends.ModelBackend',  # Para mantener el backend por defecto
+# )
+
+# from django.contrib.auth.backends import ModelBackend
+# from .models import User, SuperUser
+#
+# class CustomUserBackend(ModelBackend):
+#     def authenticate(self, request, username=None, password=None, **kwargs):
+#         try:
+#             # Intenta autenticar un usuario normal
+#             user = User.objects.get(email=username)
+#             if user.check_password(password):
+#                 return user
+#         except User.DoesNotExist:
+#             pass
+#
+#         try:
+#             # Intenta autenticar un superusuario
+#             super_user = SuperUser.objects.get(email=username)
+#             if super_user.check_password(password):
+#                 return super_user
+#         except SuperUser.DoesNotExist:
+#             pass
+#
+#         return None

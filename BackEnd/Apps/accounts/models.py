@@ -1,4 +1,7 @@
-from django.contrib.auth.hashers import make_password
+import random
+
+# Modelo para usuarios normales (User)
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
@@ -76,7 +79,6 @@ class SuperUser(AbstractUser):
     user.delete()  # Elimina el usuario original
 
 
-# Modelo para usuarios normales (User)
 class User(AbstractUser):
   birth_day = models.DateField(_('Fecha Nacimiento'), validators=[ValidatorUser.validate_age])
   first_name = models.CharField(_('Nombre'), max_length=30, validators=[ValidatorUser.validate_full_name])
@@ -85,9 +87,10 @@ class User(AbstractUser):
   email = models.EmailField(_('Correo Electrónico'), unique=True, validators=[ValidatorUser.validate_email])
   is_staff = models.BooleanField(_('Admin'), default=False)
   is_active = models.BooleanField(_('Activo'), default=True)
+
   groups = models.ManyToManyField(
     Group,
-    related_name='user_set_custom',  # Cambia el nombre aquí
+    related_name='user_groups_custom',  # Relación clara para los grupos del usuario
     blank=True,
     help_text=_('Grupos a los que este usuario pertenece.'),
     verbose_name=_('Grupos'),
@@ -95,19 +98,22 @@ class User(AbstractUser):
 
   user_permissions = models.ManyToManyField(
     Permission,
-    related_name='user_set_custom',  # Cambia el nombre aquí
+    related_name='user_permissions_custom',  # Relación clara para los permisos del usuario
     blank=True,
     help_text=_('Permisos específicos de este usuario.'),
     verbose_name=_('Permisos'),
   )
 
-  USERNAME_FIELD = 'email'
+  # Asignar el manager personalizado
+  USERNAME_FIELD = 'email'  # El email se usa como campo de autenticación principal
+  REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'birth_day']  # Campos requeridos al crear un usuario
 
   class Meta:
     verbose_name = 'Usuario'
     verbose_name_plural = 'Usuarios'
 
   def email_user(self, subject, message, from_email=None, **kwargs):
+    """Envía un correo electrónico al usuario."""
     send_mail(subject, message, from_email, [self.email], **kwargs)
 
   @staticmethod
@@ -116,16 +122,7 @@ class User(AbstractUser):
     return ''.join(random.choices('0123456789', k=length))
 
   def __str__(self):
-    return self.username
-
-  def save(self, *args, **kwargs):
-    # Encriptar la contraseña si es nueva o ha sido modificada
-    if not self.pk or not User.objects.filter(pk=self.pk, password=self.password).exists():
-      self.password = make_password(self.password)
-    super(User, self).save(*args, **kwargs)
-
-  def __str__(self):
-    # Asegúrate de que el nombre o el correo no sean None
+    """Devuelve el correo electrónico o un identificador por defecto si no hay correo."""
     return self.email or 'Usuario sin nombre'
 
 

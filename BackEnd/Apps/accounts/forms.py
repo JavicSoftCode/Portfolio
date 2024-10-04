@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.utils.translation import gettext_lazy as _
 
 from .models import User
@@ -29,26 +29,29 @@ class UserSignUpForm(UserCreationForm):
 
 
 class UserSignInForm(AuthenticationForm):
-  username = forms.EmailField(label="Correo Electrónico")
+  email = forms.EmailField(label="Correo Electrónico")
 
   class Meta:
     model = User
-    fields = ('username', 'password')
+    fields = ('email', 'password')
 
   def clean(self):
     cleaned_data = super().clean()
-    username = cleaned_data.get('username')
+    email = cleaned_data.get('email')
     password = cleaned_data.get('password')
 
-    if username and password:
-      user = authenticate(username=username, password=password)
+    if email and password:
+      # Cambia el username por el email
+      user = authenticate(request=self.request, username=email, password=password)  # Asegúrate de pasar el request aquí
       if user is None:
         raise forms.ValidationError(_('Las credenciales son incorrectas.'))
 
     return cleaned_data
 
+
+class CustomPasswordChangeForm(PasswordChangeForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    for field_name, field in self.fields.items():
-      field.widget.attrs.update({'class': 'form-control', 'placeholder': field.label})
-      field.widget.attrs.update({'style': 'border-radius: 0.25rem; padding: 0.5rem;'})
+    self.fields['old_password'].widget.attrs.update({'class': 'form-control'})
+    self.fields['new_password1'].widget.attrs.update({'class': 'form-control'})
+    self.fields['new_password2'].widget.attrs.update({'class': 'form-control'})
