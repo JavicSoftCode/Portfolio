@@ -3,19 +3,15 @@
 
 * {
     font-family: "Times New Roman", cursive;
-
 }
 
 th, td {
     text-align: center;
     vertical-align: middle;
-
-
 }
 
 .email-icon {
     font-size: 20px; /* Ajusta el tamaño del ícono */
-
 }
 
 .text {
@@ -23,7 +19,7 @@ th, td {
     font-weight: bold;
 }
 
-.field-username, .field-first_name, .field-last_name, .field-is_active, .field-is_staff, .field-birth_day{
+.field-username, .field-first_name, .field-last_name, .field-is_active, .field-is_staff, .field-birth_day {
     font-size: 14px; /* Ajusta el tamaño del ícono */
     font-weight: bold;
 }

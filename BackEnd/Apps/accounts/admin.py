@@ -34,15 +34,14 @@ class SuperUsuario(BaseUserAdmin):
 
   )
 
+  # Agrega estilos al admin de django
   class Media:
     css = {
       'all': ('css/adminDjango.css',)
     }
 
+  # Agregacion de texto de ayuda, de acuerdo si se esta editando o creando un registro.
   def get_form(self, request, obj=None, **kwargs):
-    """
-          Agregacion de texto de ayuda, de acuerdo si se esta editando o creando un registro.
-    """
     form = super(SuperUsuario, self).get_form(request, obj, **kwargs)
     if obj:  # Si estamos editando un usuario existente
       form.base_fields['is_staff'].help_text = (
@@ -57,9 +56,10 @@ class SuperUsuario(BaseUserAdmin):
       )
     return form
 
+  # Muestra el icono personalizado de fontawesome
   def email_icon(self, obj):
-    # return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
-    return format_html(' <p class=" email-icon" title="Correo Electronico">📧</p>')
+    return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
+    # return format_html(' <p class=" email-icon" title="Correo Electronico">📧</p>')
 
   email_icon.short_description = 'Correo'
 
@@ -72,24 +72,11 @@ class SuperUsuario(BaseUserAdmin):
   change_password_link.short_description = 'Acciones'
 
   def get_change_password_url(self, obj):
-    return f"/admin/accounts/superuser/{obj.id}/password/"  # Asegúrate de que esta URL sea correcta
-
-  # def get_fieldsets(self, request, obj=None):
-  #   fieldsets = super().get_fieldsets(request, obj)
-  #   if obj:  # Si estamos editando un superusuario existente
-  #     # Mostrar permisos y grupos directamente
-  #     fieldsets += (
-  #       (_('Permisos'), {'fields': ('groups', 'user_permissions')}),
-  #     )
-  #   return fieldsets
+    return f"/admin/accounts/superuser/{obj.id}/password/"
 
 
 # Configuración de User normal hacia Admin
 class Usuario(BaseUserAdmin):
-  # form = CustomUserChangeForm
-  # add_form = CustomUserCreationForm
-  # model = User
-
   list_display = ('email_icon', 'username', 'first_name', 'last_name', 'birth_day', 'is_active', 'change_password_link')
   list_filter = ('birth_day', 'is_active', 'is_staff')
   search_fields = ('email', 'username', 'first_name', 'last_name')
@@ -118,9 +105,6 @@ class Usuario(BaseUserAdmin):
     }
 
   def get_form(self, request, obj=None, **kwargs):
-    """
-          Agregacion de texto de ayuda, de acuerdo si se esta editando o creando un registro.
-    """
     form = super(Usuario, self).get_form(request, obj, **kwargs)
     if obj:  # Si estamos editando un usuario existente
       form.base_fields['is_staff'].help_text = (
@@ -133,8 +117,8 @@ class Usuario(BaseUserAdmin):
     return form
 
   def email_icon(self, obj):
-    # return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
-    return format_html(' <p class=" email-icon">📧</p>')
+    return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
+    # return format_html(' <p class=" email-icon">📧</p>')
 
   email_icon.short_description = 'Correo'
 

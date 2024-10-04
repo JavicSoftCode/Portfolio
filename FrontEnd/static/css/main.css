@@ -19,7 +19,7 @@ html::-webkit-scrollbar {
 nav {
     font-size: 20px;
     font-weight: bold;
-    position: fixed;   /* Hace que el nav quede fijo en la parte superior */
+    position: fixed; /* Hace que el nav quede fijo en la parte superior */
 
 }
 
@@ -138,6 +138,7 @@ body, .bg-black {
     text-align: justify;
     line-height: 1.6;
 }
+
 /* Contenedor General */
 .container {
     margin-top: -10px;

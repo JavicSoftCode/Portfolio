@@ -15,5 +15,4 @@ def generate_slug(text):
 urlpatterns = [
   path(f'p/{generate_slug("portfolio_and_projects")}/', PortfolioListView.as_view(), name='portfolio_and_projects'),
   path('accounts/', include('BackEnd.Apps.accounts.urls', namespace='accounts')),
-
 ]

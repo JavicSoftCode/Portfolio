@@ -45,8 +45,8 @@ MIDDLEWARE = [
   'django.contrib.messages.middleware.MessageMiddleware',
   'django.middleware.clickjacking.XFrameOptionsMiddleware',
   # My middleware
-  # 'BackEnd.Apps.accounts.middleware.no_back_after_logout',  # VISTA BASADA EN FUNCIONES
-  # 'BackEnd.Apps.accounts.middleware.NoBackAfterLogoutMiddleware',  # VISTA BASADA EN FUNCIONES
+  # Tu middleware personalizado para deshabilitar el caché
+  'BackEnd.Apps.accounts.middleware.NoCacheMiddleware',
 ]
 
 ROOT_URLCONF = 'Portfolio.urls'
@@ -126,8 +126,7 @@ MEDIA_URL = '/public/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Modelo de usuario personalizado
-# AUTH_USER_MODEL = 'accounts.SuperUser'
-AUTH_USER_MODEL = 'accounts.User'  # Asegúrate de que esta línea apunte a tu modelo de usuario
+AUTH_USER_MODEL = 'accounts.CustomUser'  # Asegúrate de que esta línea apunte a tu modelo de usuario
 
 # Configuración de las URLs de inicio de sesión y cierre de sesión
 LOGIN_URL = 'accounts:signin'  # Nombre de la URL para el inicio de sesión
@@ -144,34 +143,3 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#
-#
-#
-# AUTHENTICATION_BACKENDS = (
-#     'accounts.backends.CustomUserBackend',  # Asegúrate de poner la ruta correcta
-#     'django.contrib.auth.backends.ModelBackend',  # Para mantener el backend por defecto
-# )
-
-# from django.contrib.auth.backends import ModelBackend
-# from .models import User, SuperUser
-#
-# class CustomUserBackend(ModelBackend):
-#     def authenticate(self, request, username=None, password=None, **kwargs):
-#         try:
-#             # Intenta autenticar un usuario normal
-#             user = User.objects.get(email=username)
-#             if user.check_password(password):
-#                 return user
-#         except User.DoesNotExist:
-#             pass
-#
-#         try:
-#             # Intenta autenticar un superusuario
-#             super_user = SuperUser.objects.get(email=username)
-#             if super_user.check_password(password):
-#                 return super_user
-#         except SuperUser.DoesNotExist:
-#             pass
-#
-#         return None

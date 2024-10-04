@@ -1,5 +1,6 @@
-from datetime import date
 import re
+from datetime import date
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +12,7 @@ class ValidatorUser:
   def validate_age(birth_day):
     today = date.today()
     age = today.year - birth_day.year - ((today.month, today.day) < (birth_day.month, birth_day.day))
-    if age < 18:  # o la edad mínima que desees
+    if age < 18:
       raise ValidationError('El usuario debe ser mayor de 18 años.')
 
   @staticmethod
@@ -25,10 +26,9 @@ class ValidatorUser:
 
   @staticmethod
   def validate_username(username):
-    """Valida el nombre de usuario."""
-    MaxLengthValidator(20, _('Nombre de usuario maximo 10 caracteres'))
+    MaxLengthValidator(20, _('Nombre de usuario maximo 20 caracteres'))
     if not re.match(r'^\w+$', username):
-      raise ValidationError('El nombre de usuario solo puede contener letras, números y guiones bajos.')
+      raise ValidationError('El nombre de usuario solo puede contener letras, números y guiones bajos. SIN ESPACIOS')
     return username
 
   @staticmethod
@@ -41,7 +41,6 @@ class ValidatorUser:
 
   @staticmethod
   def validate_password(self, password):
-    """Valida la contraseña."""
     if len(password) < 8:
       raise ValidationError('La contraseña debe tener al menos 8 caracteres.')
     return password

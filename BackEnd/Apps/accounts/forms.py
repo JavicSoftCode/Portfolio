@@ -21,10 +21,8 @@ class UserSignUpForm(UserCreationForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
-    # Agrega la clase de Bootstrap a las etiquetas y a los campos
     for field_name, field in self.fields.items():
-      field.widget.attrs.update({'class': 'form-control', 'placeholder': field.label})  # Clase para Bootstrap
-      # Adicionalmente, puedes personalizar el tamaño y el borde de los inputs
+      field.widget.attrs.update({'class': 'form-control', 'placeholder': field.label})
       field.widget.attrs.update({'style': 'border-radius: 0.25rem; padding: 0.5rem; color:black;'})
 
 
@@ -32,7 +30,6 @@ class UserSignInForm(AuthenticationForm):
   class Meta:
     model = User
     User.email = forms.EmailField(required=True)
-
     fields = ('email', 'password')
 
   def clean(self):
@@ -44,7 +41,6 @@ class UserSignInForm(AuthenticationForm):
       user = authenticate(email=email, password=password)
       if user is None:
         raise forms.ValidationError(_('Las credenciales son incorrectas.'))
-
     return cleaned_data
 
   def __init__(self, *args, **kwargs):

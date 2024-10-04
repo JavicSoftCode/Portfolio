@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import redirect
@@ -32,24 +32,10 @@ class SignInView(LoginView):
   template_name = 'appAccounts/signin.html'
   success_url = reverse_lazy('accounts:core:home')
 
-  # # def dispatch(self, request, *args, **kwargs):
-  # #   # Si el usuario ya está autenticado, redirige a la página de inicio o donde quieras
-  # #   if request.user.is_authenticated:
-  # #     return redirect('accounts:core:home')
-  # #
-  # #   # Elimina la cookie si existe
-  # #   if request.COOKIES.get('sessionid'):
-  # #     response = super().dispatch(request, *args, **kwargs)
-  # #     response.delete_cookie('sessionid')  # Elimina la cookie de sesión
-  # #     return response
-  #
-  #   return super().dispatch(request, *args, **kwargs)
-
+  @method_decorator(never_cache)
   def dispatch(self, request, *args, **kwargs):
-    # Si el usuario ya está autenticado, redirige a la página de inicio
     if request.user.is_authenticated:
-      return redirect(self.success_url)  # Usa success_url aquí
-
+      return redirect(self.success_url)
     return super().dispatch(request, *args, **kwargs)
 
   def form_valid(self, form):
@@ -65,15 +51,19 @@ class SignOutView(LoginRequiredMixin, LogoutView):
   def dispatch(self, request, *args, **kwargs):
     messages.success(request, '¡Has cerrado sesión exitosamente!')
     response = super().dispatch(request, *args, **kwargs)
-    logout(request)  # Cerrar sesión para eliminar cookies
+    logout(request)
     return response
 
 
 # Vista para cambiar la contraseña
 class ChangePasswordView(LoginRequiredMixin, PasswordChangeView):
-  form_class = UserSignUpForm  # Cambia esto a tu formulario de cambio de contraseña
+  form_class = UserSignUpForm
   template_name = 'appAccounts/resetPassword.html'
   success_url = reverse_lazy('accounts:core:home')
+
+  @method_decorator(never_cache)
+  def dispatch(self, request, *args, **kwargs):
+    return super().dispatch(request, *args, **kwargs)
 
   def form_valid(self, form):
     messages.success(self.request, '¡Tu contraseña ha sido actualizada exitosamente!')
