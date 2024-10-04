@@ -1,4 +1,3 @@
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, Group, Permission, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
@@ -85,6 +84,7 @@ class User(AbstractUser):
   email = models.EmailField(_('Correo Electrónico'), unique=True, validators=[ValidatorUser.validate_email])
   is_staff = models.BooleanField(_('Admin'), default=False)
   is_active = models.BooleanField(_('Activo'), default=True)
+
   groups = models.ManyToManyField(
     Group,
     related_name='user_set_custom',  # Cambia el nombre aquí
@@ -119,12 +119,11 @@ class User(AbstractUser):
   def __str__(self):
     return self.username
 
-  def save(self, *args, **kwargs):
-    # Encriptar la contraseña si es nueva o ha sido modificada
-    if not self.pk or self.password != User.objects.get(pk=self.pk).password:
-        self.set_password(self.password)  # Utiliza set_password para encriptar
-    super(User, self).save(*args, **kwargs)
-
+  # def save(self, *args, **kwargs):
+  #   # Encriptar la contraseña si es nueva o ha sido modificada
+  #   if not self.pk or self.password != User.objects.get(pk=self.pk).password:
+  #       self.set_password(self.password)  # Utiliza set_password para encriptar
+  #   super(User, self).save(*args, **kwargs)
 
   def __str__(self):
     # Asegúrate de que el nombre o el correo no sean None

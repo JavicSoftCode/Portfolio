@@ -29,7 +29,6 @@ class UserSignUpForm(UserCreationForm):
 
 
 class UserSignInForm(AuthenticationForm):
-
   class Meta:
     model = User
     User.email = forms.EmailField(required=True)

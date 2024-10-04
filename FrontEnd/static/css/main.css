@@ -1,25 +1,61 @@
-/*@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');*/
-                                            /* Eliminar barra de desplazamiento */
+/* Importación de Font Awesome */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
+/* Eliminar barra de desplazamiento */
 html::-webkit-scrollbar {
     width: 0;
 }
 
-/* Colores de fondo */
+/* General */
+* {
+    font-family: "Times New Roman", cursive;
+    color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Navegación */
+nav {
+    font-size: 20px;
+    font-weight: bold;
+    position: fixed;   /* Hace que el nav quede fijo en la parte superior */
+
+}
+
+li:hover {
+    box-shadow: 0 5px 10px navy; /* Sombra azul marino */
+}
+
+/* Botones */
+button, .btn- {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+button:hover, .btn-:hover {
+    box-shadow: 0 5px 10px navy;
+}
+
+nav .btn- {
+    background-color: black;
+    border: none;
+    margin-left: 1rem;
+}
+
+/* Fondo y colores */
 body, .bg-black {
     background-color: #090909;
 }
 
-
-/* Efectos hover */
+/* Tarjetas de proyecto */
 .card-project:hover {
     border: 1px solid #eee;
     cursor: pointer;
 }
 
-/* Estilos para imágenes */
-.img-size,
-.img-size-portfolio,
-.img-blog-datails {
+/* Estilos de imágenes */
+.img-size, .img-size-portfolio, .img-blog-datails {
     border-radius: 20px;
     object-fit: cover;
 }
@@ -40,14 +76,13 @@ body, .bg-black {
     margin: 0 20px 10px 0;
 }
 
-/* Botones */
+/* Botones CV */
 .btn-cv {
     background-color: #001f3f; /* Azul marino */
     color: white;
 }
 
-
-/* Logos y efectos de hover */
+/* Logotipos y efectos hover */
 .tech-logos .logo-wrapper {
     display: inline-block;
     margin-right: 12px;
@@ -79,17 +114,31 @@ body, .bg-black {
 /* Estilo adicional */
 .img-JSC {
     margin-top: -57%;
-    margin-left: -30%;
+    margin-left: -12%;
 }
 
-.font-family-home,
-.justif-interlineado {
+/* Tipografía y alineación de texto */
+.font-family-home, .justif-interlineado {
     font-family: "Times New Roman", cursive;
     font-size: 18px;
     text-align: justify;
     line-height: 1.6;
 }
 
+/* Contenedor */
 .container {
     margin-top: -5px;
+}
+
+
+/* Alineación del contenedor de bienvenida */
+.font-family-home, .justif-interlineado {
+    font-family: "Times New Roman", cursive;
+    font-size: 18px;
+    text-align: justify;
+    line-height: 1.6;
+}
+/* Contenedor General */
+.container {
+    margin-top: -10px;
 }

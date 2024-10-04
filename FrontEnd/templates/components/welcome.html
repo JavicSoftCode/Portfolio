@@ -1,10 +1,17 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/welcome.css' %}">
-<div class="container-welcome">
-    <div class="text">
-        <h1>Bienvenido Por Visitar</h1>
-        <p>Mi Portafolio Web</p>
-        <p>Javic Soft Code</p>
+<div class="container-principal_welcome">
+    <div class="container-welcome">
+        <div class="text">
+            {% if user.is_authenticated %}
+                <h1>Bienvenido {{ user.username }}</h1>
+            {% else %}
+                <h1>Bienvenido Developer</h1>
+            {% endif %}
+            <p>Mi Portafolio Web</p>
+            <p>Javic Soft Code</p>
+        </div>
+        <img class="custom-shadow" src="{% static 'public/appMy_Portfolio_and_Projects/JSC.jpeg' %}"
+             alt="JavicSoftCode">
     </div>
-    <img src="{% static 'public/appMy_Portfolio_and_Projects/JSC.jpeg' %}" alt="Logo o imagen relacionada">
 </div>

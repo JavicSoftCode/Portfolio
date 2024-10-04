@@ -38,3 +38,7 @@ img {
     height: auto;
     border-radius: 10px;
 }
+
+.custom-shadow {
+    box-shadow: 7px 7px 20px navy;
+}
