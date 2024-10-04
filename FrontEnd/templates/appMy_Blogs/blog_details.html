@@ -1,0 +1,17 @@
+{% extends 'appCore/home.html' %}
+{% block title %} {{ title }} {% endblock title %}
+{% block content %}
+
+<div>
+    <div class="container">
+        <h1 class="align-center">{{ blog.title }}</h1>
+        <h2 class="my-2 h5 text-muted">{{ blog.date|date:'F jS Y' }}</h2>
+         <br>
+        <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-fluid img-blog-datails">
+    </div>
+    <div class="my-4">
+        {{ blog.description|safe }}
+    </div>
+</div>
+
+{% endblock %}

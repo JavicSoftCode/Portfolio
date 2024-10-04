@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    font-family: Arial, sans-serif;
+}
+
+.container-welcome {
+    margin-top: 6%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.text {
+    font-size: 60px;
+    margin-right: 20px;
+    color: white;
+}
+
+h1 {
+    font-size: 80px;
+    margin: 0;
+    color: white;
+}
+
+p {
+    font-size: 60px;
+    color: white;
+    margin-top: 10px;
+}
+
+img {
+    max-width: 350px;
+    height: auto;
+    border-radius: 10px;
+}

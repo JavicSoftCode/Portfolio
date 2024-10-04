@@ -1,0 +1,95 @@
+/*@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');*/
+                                            /* Eliminar barra de desplazamiento */
+html::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Colores de fondo */
+body, .bg-black {
+    background-color: #090909;
+}
+
+
+/* Efectos hover */
+.card-project:hover {
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+
+/* Estilos para imágenes */
+.img-size,
+.img-size-portfolio,
+.img-blog-datails {
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+.img-size, .img-size-portfolio {
+    width: 250px;
+    height: 160px;
+}
+
+.img-size-portfolio {
+    margin-left: 17%;
+}
+
+.img-blog-datails {
+    width: 600px;
+    height: 350px;
+    float: left;
+    margin: 0 20px 10px 0;
+}
+
+/* Botones */
+.btn-cv {
+    background-color: #001f3f; /* Azul marino */
+    color: white;
+}
+
+
+/* Logos y efectos de hover */
+.tech-logos .logo-wrapper {
+    display: inline-block;
+    margin-right: 12px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tech-logos .logo-wrapper:hover::before {
+    content: attr(title);
+    position: absolute;
+    top: -25px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.tech-logos img {
+    transition: transform 0.2s ease;
+}
+
+.tech-logos img:hover {
+    transform: scale(1.2);
+}
+
+/* Estilo adicional */
+.img-JSC {
+    margin-top: -57%;
+    margin-left: -30%;
+}
+
+.font-family-home,
+.justif-interlineado {
+    font-family: "Times New Roman", cursive;
+    font-size: 18px;
+    text-align: justify;
+    line-height: 1.6;
+}
+
+.container {
+    margin-top: -5px;
+}
