@@ -119,32 +119,49 @@
         </header>
     </div>
 
-    <div class="row my-4 text-center">
+     <div class="row my-4 text-center">
         <h3>Mis Proyectos</h3>
-
-        <p>Proyectos realizados por mi, con el fin de mejorar mis habilidades en el desarrollo web. <br>
-            Si te gusta alguno de ellos, no dudes en contactar conmigo para trabajar juntos</p>
-
-        {% for project in projects %}
-            <div class="col-md-4 p-4 ">
-                <div class="card bg-black card-project">
-
-                    <img src="{{ project.image.url }}" class="card-img-top img-size-portfolio"
-                         alt="{{ project.title }}"/>
-
-                    <div class="card-body ">
-                        <h2>{{ project.title }}</h2>
-                        <p>{{ project.description }}</p>
-
-                        {% if project.url %}
-                            <a href="{{ project.url }}" class="btn btn-light rounded-0 btn-sm " target="__blank"
-                               rel="noreferrer">Visitar
-                                el Proyecto</a>
-                        {% endif %}
-
+        {% if projects %}
+            {% for project in projects %}
+                <div class="col-md-4 p-4 ">
+                    <div class="card bg-black card-project">
+                        <img src="{{ project.image.url }}" class="card-img-top img-size-portfolio"
+                             alt="{{ project.title }}"/>
+                        <div class="card-body ">
+                            <h2>{{ project.title }}</h2>
+                            <p>{{ project.description }}</p>
+                            {% if project.url %}
+                                <a href="{{ project.url }}" class="btn btn-light rounded-0 btn-sm " target="__blank"
+                                   rel="noreferrer">Visitar
+                                    el Proyecto</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p>No hay proyectos disponibles.</p>
+        {% endif %}
+    </div> <br>
+
+    <div class="row my-4 text-center">
+        <h3>Mis Cursos</h3>
+        {% if cursos %}
+            {% for curso in cursos %}
+                <div class="col-md-4 p-4">
+                    <div class="card bg-black card-project">
+                        <div class="card-body">
+                            <h2>{{ curso.institution_of_the_course }}</h2>
+                            <p class="justif-interlineado"><strong>Descripción:</strong> {{ curso.course_description }}</p>
+                            <p><strong>Fecha:</strong> {{ curso.course_date }}</p>
+                            <p><strong>Horas:</strong> {{ curso.number_of_hours }} horas</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay cursos disponibles.</p>
+        {% endif %}
     </div>
+
 {% endblock %}

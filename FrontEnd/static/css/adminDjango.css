@@ -1,6 +1,9 @@
 /* Centrar contenido en columnas y ajustar el tamaño del ícono */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
-
+                 /* Eliminar barra de desplazamiento */
+html::-webkit-scrollbar {
+    width: 0;
+}
 * {
     font-family: "Times New Roman", cursive;
 }
@@ -22,4 +25,13 @@ th, td {
 .field-username, .field-first_name, .field-last_name, .field-is_active, .field-is_staff, .field-birth_day {
     font-size: 14px; /* Ajusta el tamaño del ícono */
     font-weight: bold;
+}
+
+
+
+
+.readonly {
+    text-align: justify; /* Justifica el texto */
+    margin: 10px 0; /* Añade margen superior e inferior */
+    line-height: 1.5; /* Mejora la legibilidad con un mayor interlineado */
 }

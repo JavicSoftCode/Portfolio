@@ -112,6 +112,7 @@ class Role(models.Model):
 
 
 class SuperUser(CustomUser):
+
   class Meta:
     verbose_name = 'Super Usuario'
     verbose_name_plural = 'Super Usuarios'

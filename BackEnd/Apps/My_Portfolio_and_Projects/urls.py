@@ -3,7 +3,7 @@ import hashlib
 from django.urls import path, include
 
 # @JavicSoftCode
-from .views import PortfolioListView
+from .views import PortfolioAndCursoTemplateView
 
 app_name = 'My_Portfolio_and_Projects'
 
@@ -13,6 +13,6 @@ def generate_slug(text):
 
 
 urlpatterns = [
-  path(f'p/{generate_slug("portfolio_and_projects")}/', PortfolioListView.as_view(), name='portfolio_and_projects'),
+  path(f'p/{generate_slug("portfolio_and_projects")}/', PortfolioAndCursoTemplateView.as_view(), name='portfolio_and_projects'),
   path('accounts/', include('BackEnd.Apps.accounts.urls', namespace='accounts')),
 ]

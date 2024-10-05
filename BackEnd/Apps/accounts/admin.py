@@ -3,19 +3,19 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-# @JavicSoftCode
 from .models import SuperUser, User, UserAdmin
 
 
 # Configuración del admin para SuperUser
 class SuperUsuario(BaseUserAdmin):
-  list_display = ('email_icon', 'username', 'first_name', 'last_name', 'birth_day', 'is_active', 'change_password_link')
-  list_filter = ('is_staff', 'is_superuser', 'is_active')
+  list_display = ('email_icon', 'username', 'first_name', 'last_name', 'birth_day', 'is_active', 'action_buttons')
+  list_display_links = None
   search_fields = ('email', 'username', 'first_name', 'last_name')
   ordering = ('email', 'username')
   readonly_fields = ('last_login', 'date_joined', 'password')
 
-  # Formulario para actualizar un SuperUser
+  list_filter = ()
+
   fieldsets = (
     (_('Registro Super Usuario'),
      {'fields': ('email', 'username', 'password', 'is_active', 'is_staff', 'is_superuser')}),
@@ -24,74 +24,89 @@ class SuperUsuario(BaseUserAdmin):
     (_('Permisos'), {'fields': ('groups', 'user_permissions')}),
   )
 
-  # Formulario para un nuevo SuperUser
   add_fieldsets = (
     (_('Registrando Nuevo Super Usuario'), {'classes': ('wide',), 'fields': (
       'email', 'username', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser'), }),
     (_('Información Personal'), {'fields': ('first_name', 'last_name', 'birth_day')}),
     (_('Fechas Importantes'), {'fields': ('last_login', 'date_joined')}),
     (_('Permisos'), {'fields': ('groups', 'user_permissions')}),
-
   )
 
-  # Agrega estilos al admin de django
   class Media:
     css = {
       'all': ('css/adminDjango.css',)
     }
 
-  # Agregacion de texto de ayuda, de acuerdo si se esta editando o creando un registro.
-  def get_form(self, request, obj=None, **kwargs):
-    form = super(SuperUsuario, self).get_form(request, obj, **kwargs)
-    if obj:  # Si estamos editando un usuario existente
-      form.base_fields['is_staff'].help_text = (
-        "Actualmente tiene acceso, al panel de Administrador."
-      )
-    else:
-      form.base_fields['is_staff'].help_text = (
-        "Tendra acceso al panel de Administrador."
-      )
-      form.base_fields['password1'].help_text = (
-        "Cantraseña valida mayor a 8 caracteres."
-      )
-    return form
+  def __init__(self, model, admin_site):
+    super().__init__(model, admin_site)
+    self.request = None
 
-  # Muestra el icono personalizado de fontawesome
   def email_icon(self, obj):
-    return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
-    # return format_html(' <p class=" email-icon" title="Correo Electronico">📧</p>')
+    current_user = self.request.user
+
+    email = obj.email
+    subject = "Administrador de Django"
+    body = f"Buen Día, le saluda {current_user.first_name} {current_user.last_name}"
+
+    gmail_url = (
+      f"https://mail.google.com/mail/?view=cm&fs=1&to={email}&su={subject}&body={body}&tf=1"
+    )
+
+    return format_html('<a href="{}" target="_blank"><i class="fa-solid fa-envelope email-icon"></i></a>', gmail_url)
 
   email_icon.short_description = 'Correo'
 
-  def change_password_link(self, obj):
-    if obj:
-      return format_html('<a href="{}" class="button">Cambiar Contraseña</a>',
-                         self.get_change_password_url(obj))
-    return ""
+  def action_buttons(self, obj):
+    return format_html(
+      '<a href="{}" class="button" title="Actualizar contraseña">'
+      '<i class="fa-solid fa-key"></i></a>'
+      '&nbsp;<a href="{}" class="button" title="Editar">'
+      '<i class="fa-solid fa-pencil-alt"></i></a>'
+      '&nbsp;<a href="{}" class="button" title="Eliminar" onclick="return confirm(\'¿Está seguro de eliminar este Super Usuario?\')">'
+      '<i class="fa-solid fa-trash"></i></a>',
+      self.get_change_password_url(obj),
+      self.get_edit_url(obj),
+      self.get_delete_url(obj)
+    )
 
-  change_password_link.short_description = 'Acciones'
+  action_buttons.short_description = 'Acciones'
 
   def get_change_password_url(self, obj):
     return f"/admin/accounts/superuser/{obj.id}/password/"
 
+  def get_edit_url(self, obj):
+    return f"/admin/accounts/superuser/{obj.id}/change/"
 
-# Configuración de User normal hacia Admin
+  def get_delete_url(self, obj):
+    return f"/admin/accounts/superuser/{obj.id}/delete/"
+
+  def response_add(self, request, obj, post_url_continue=None):
+    if "_addanother" in request.POST:
+      return super().response_add(request, obj, post_url_continue)
+    else:
+      return self.response_post_save_change(request, obj)
+
+  def get_queryset(self, request):
+    self.request = request
+    return super().get_queryset(request)
+
+
+# Configuración para User normal hacia Admin
 class Usuario(BaseUserAdmin):
-  list_display = ('email_icon', 'username', 'first_name', 'last_name', 'birth_day', 'is_active', 'change_password_link')
-  list_filter = ('birth_day', 'is_active', 'is_staff')
+  list_display = ('email_icon', 'username', 'first_name', 'last_name', 'birth_day', 'is_active', 'action_buttons')
+  list_display_links = None
   search_fields = ('email', 'username', 'first_name', 'last_name')
-  ordering = ('email', 'username')
   ordering = ('email', 'username')
   readonly_fields = ('last_login', 'date_joined', 'password')
 
-  # Formulario para actualizar un User
+  list_filter = ()
+
   fieldsets = (
     (_('Registro Usuario'), {'fields': ('email', 'username', 'password', 'is_active', 'is_staff')}),
     (_('Información Personal'), {'fields': ('first_name', 'last_name', 'birth_day')}),
     (_('Fechas Importantes'), {'fields': ('last_login', 'date_joined')}),
   )
 
-  # Formulario para un nuevo User
   add_fieldsets = (
     (_('Registrando Nuevo Usuario'),
      {'classes': ('wide',), 'fields': ('email', 'username', 'password1', 'password2', 'is_active', 'is_staff')}),
@@ -104,33 +119,58 @@ class Usuario(BaseUserAdmin):
       'all': ('css/adminDjango.css',)
     }
 
-  def get_form(self, request, obj=None, **kwargs):
-    form = super(Usuario, self).get_form(request, obj, **kwargs)
-    if obj:  # Si estamos editando un usuario existente
-      form.base_fields['is_staff'].help_text = (
-        "Actualmente tiene acceso, al panel de Administrador."
-      )
-    else:
-      form.base_fields['is_staff'].help_text = (
-        "Tendra acceso al panel de Administrador."
-      )
-    return form
+  def __init__(self, model, admin_site):
+    super().__init__(model, admin_site)
+    self.request = None
 
   def email_icon(self, obj):
-    return format_html('<i class="fa-solid fa-envelope email-icon"></i>')
-    # return format_html(' <p class=" email-icon">📧</p>')
+    current_user = self.request.user
+
+    email = obj.email
+    subject = "Administrador de Django"
+    body = f"Buen Día, le saluda {current_user.first_name} {current_user.last_name}"
+
+    gmail_url = (
+      f"https://mail.google.com/mail/?view=cm&fs=1&to={email}&su={subject}&body={body}&tf=1"
+    )
+
+    return format_html('<a href="{}" target="_blank" class="button"><i class="fa-solid fa-envelope email-icon"></i></a>', gmail_url)
 
   email_icon.short_description = 'Correo'
 
-  def change_password_link(self, obj):
-    if obj:
-      return format_html('<a href="{}" class="button">Cambiar Contraseña</a>', self.get_change_password_url(obj))
-    return ""
+  def action_buttons(self, obj):
+    return format_html(
+      '<a href="{}" class="button" title="Actualizar contraseña">'
+      '<i class="fa-solid fa-key"></i></a>'
+      '&nbsp;<a href="{}" class="button" title="Editar">'
+      '<i class="fa-solid fa-pencil-alt"></i></a>'
+      '&nbsp;<a href="{}" class="button" title="Eliminar" onclick="return confirm(\'¿Está seguro de eliminar este Usuario?\')">'
+      '<i class="fa-solid fa-trash"></i></a>',
+      self.get_change_password_url(obj),
+      self.get_edit_url(obj),
+      self.get_delete_url(obj)
+    )
 
-  change_password_link.short_description = 'Acciones'
+  action_buttons.short_description = 'Acciones'
 
   def get_change_password_url(self, obj):
     return f"/admin/accounts/user/{obj.id}/password/"
+
+  def get_edit_url(self, obj):
+    return f"/admin/accounts/user/{obj.id}/change/"
+
+  def get_delete_url(self, obj):
+    return f"/admin/accounts/user/{obj.id}/delete/"
+
+  def response_add(self, request, obj, post_url_continue=None):
+    if "_addanother" in request.POST:
+      return super().response_add(request, obj, post_url_continue)
+    else:
+      return self.response_post_save_change(request, obj)
+
+  def get_queryset(self, request):
+    self.request = request
+    return super().get_queryset(request)
 
 
 # Configuración para administrar a User que pasaron a ser Admin
@@ -147,6 +187,11 @@ class AdminUserAdmin(admin.ModelAdmin):
   )
 
   filter_horizontal = ('roles',)
+
+  class Media:
+    css = {
+      'all': ('css/adminDjango.css',)
+    }
 
   def list_roles(self, obj):
     return ", ".join([role.name for role in obj.roles.all()])

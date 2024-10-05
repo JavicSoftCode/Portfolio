@@ -143,3 +143,10 @@ body, .bg-black {
 .container {
     margin-top: -10px;
 }
+
+
+/*.readonly {*/
+/*    text-align: justify; !* Justifica el texto *!*/
+/*    margin: 10px 0; !* Añade margen superior e inferior *!*/
+/*    line-height: 1.5; !* Mejora la legibilidad con un mayor interlineado *!*/
+/*}*/
